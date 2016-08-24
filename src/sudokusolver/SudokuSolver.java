@@ -18,6 +18,7 @@ public class SudokuSolver {
     
     public static void main(String[] args) {
         Board sudoku = new Board();
+        System.out.println();
         sudoku.printBoard();
     }    
 }
