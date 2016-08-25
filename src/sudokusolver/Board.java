@@ -5,7 +5,10 @@
  */
 package sudokusolver;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -14,45 +17,54 @@ import java.util.List;
 public class Board {
     int NUM_ROW = 9;
     int NUM_COLUMN = 9;
-    int NUM_SET = 9;
-    int NUM_HYPERSET = 4;
+    int NUM_BOX = 9;
+    int NUM_HYPERBOX = 4;
     private Cell[] board;
-    private int[][] sets, hypersets, rows, columns;
+           
+    List<List<Integer>> rows = new ArrayList<>();
+    List<List<Integer>> columns = new ArrayList<>();
+    List<List<Integer>> boxes = new ArrayList<>();
+    List<List<Integer>> hyperboxes = new ArrayList<>();       
     
-    
-    public Board(){  
-        sets = new int[NUM_SET][9];
-        hypersets = new int[NUM_HYPERSET][9];
-        rows = new int[NUM_ROW][9];
-        columns = new int[NUM_COLUMN][9];
+    public Board(){    
+        for(int j = 0; j < NUM_ROW; j++){
+            rows.add(new ArrayList<>());
+        }
+        for(int j = 0; j < NUM_COLUMN; j++){
+            columns.add(new ArrayList<>());
+        }
+        for(int j = 0; j < NUM_BOX; j++){
+            boxes.add(new ArrayList<>());
+        }
+        for(int j = 0; j < NUM_HYPERBOX; j++){
+            hyperboxes.add(new ArrayList<>());
+        }        
+        
         board = createBoard();
-        loadSets(board);
         printSets();
     }
     
     public Cell[] createBoard(){
         Cell[] board = new Cell[81];    
         int index = 0;
-        for(int i = 1; i <= NUM_COLUMN; i++){
-            for(int j = 1; j <= NUM_ROW; j++){
-                board[index] = new Cell(j, i);
-//                rows[i - 1][j - 1] = index;               
-//                columns[j - 1][i - 1] = index;                
-//                
-//                sets[board[index].getSet() - 1][j - 1] = index;
-//                
-//                if(board[index].getHyperset() != 0){
-//                    hypersets[board[index].getHyperset() - 1][ 0 ] = index;
-//                }
-                rows[i - 1][j - 1] = index;               
-                columns[j - 1][i - 1] = index;                
+        for(int i = 1; i <= NUM_ROW; i++){
+            for(int j = 1; j <= NUM_COLUMN; j++){
+                board[index] = new Cell(i, j);
+                
+                // Load the number to sets
+                rows.get(i - 1).add(board[index].getValue());               
+                columns.get(j - 1).add(board[index].getValue());
+                boxes.get(board[index].getSet() - 1).add(board[index].getValue());
+                if(board[index].getHyperbox() != 0){
+                    hyperboxes.get(board[index].getHyperbox() - 1).add(board[index].getValue());
+                }
                 
                 index++;
             }
         }                
         return board;
     }
-    
+      
     public void printBoard(){
         int index = 0;
         for(int j = 1; j <= NUM_ROW; j++){
@@ -64,27 +76,15 @@ public class Board {
         }
     }
     
-    public void generateSudoku(int n){
-        
-    }
-    
     public Cell[] getBoard(){
         return board;
-    }
-    
-    public boolean checkCells(Cell cell){
-        return false;
-    }
-    
-    public boolean checkSolution(){
-        return false;
     }
     
     public void printSets(){
         System.out.println("Rows:");
         for(int j = 0; j < NUM_ROW; j++){
             for(int i = 0; i < NUM_ROW; i++){
-                System.out.print(rows[j][i] + " ");
+                System.out.print(rows.get(j).get(i) + " ");
             }
         }
         System.out.println();
@@ -92,91 +92,67 @@ public class Board {
         System.out.println("Columns:");
         for(int j = 0; j < NUM_ROW; j++){
             for(int i = 0; i < NUM_ROW; i++){
-                System.out.print(columns[j][i] + " ");
+                System.out.print(columns.get(j).get(i) + " ");
             }
         }
         System.out.println();
         
-        System.out.println("Sets:");
-        for(int j = 0; j < NUM_SET; j++){
+        System.out.println("Boxes:");
+        for(int j = 0; j < NUM_BOX; j++){
             for(int i = 0; i < 9; i++){
-                System.out.print(sets[j][i] + " ");
+                System.out.print(boxes.get(j).get(i) + " ");
             }
             System.out.println();
         }
         
-        System.out.println("Hypersets:");
-        for(int j = 0; j < NUM_HYPERSET; j++){
+        System.out.println("Hyperboxes:");
+        for(int j = 0; j < NUM_HYPERBOX; j++){
             for(int i = 0; i < 9; i++){
-                System.out.print(hypersets[j][i] + " ");
+                System.out.print(hyperboxes.get(j).get(i) + " ");
             }
             System.out.println();
         }
     }
     
-    public void loadSets(Cell[] cells){
-        int index0 = 0, index1 = 0, index2 = 0, index3 = 0, index4 = 0, index5 = 0, index6 = 0, index7 = 0, index8 = 0;
-        int hyper0 = 0, hyper1 = 0, hyper2 = 0, hyper3 = 0;
-        for(int i = 0; i < cells.length; i++){            
-            switch (cells[i].getSet()) {
-                case 1:
-                    sets[0][index0] = cells[i].getIndex();
-                    index0++;
-                    break;
-                case 2:
-                    sets[1][index1] = cells[i].getIndex();
-                    index1++;
-                    break;
-                case 3:
-                    sets[2][index2] = cells[i].getIndex();
-                    index2++;
-                    break;
-                case 4:
-                    sets[3][index3] = cells[i].getIndex();
-                    index3++;
-                    break;
-                case 5:
-                    sets[4][index4] = cells[i].getIndex();
-                    index4++;
-                    break;
-                case 6:
-                    sets[5][index5] = cells[i].getIndex();
-                    index5++;
-                    break;
-                case 7:
-                    sets[6][index6] = cells[i].getIndex();
-                    index6++;
-                    break;
-                case 8:
-                    sets[7][index7] = cells[i].getIndex();
-                    index7++;
-                    break;
-                case 9:
-                    sets[8][index8] = cells[i].getIndex();
-                    index8++;
-                    break;
-                default:
-                    break;
-            }
-            
-            switch (cells[i].getHyperset()) {
-                case 1:
-                    hypersets[0][hyper0] = cells[i].getIndex();
-                    hyper0++;
-                    break;
-                case 2:
-                    hypersets[1][hyper1] = cells[i].getIndex();
-                    hyper1++;
-                    break;
-                case 3:
-                    hypersets[2][hyper2] = cells[i].getIndex();
-                    hyper2++;
-                    break;
-                case 4:
-                    hypersets[3][hyper3] = cells[i].getIndex();
-                    hyper3++;
-                    break;
-            }
+    public boolean checkCells(Cell cell){         
+        if(rows.get(cell.getRow() - 1).contains(cell.getValue())){
+            return false;
+        }
+        
+        if(columns.get(cell.getColumn() - 1).contains(cell.getValue())){
+            return false;
+        }
+        
+        if(boxes.get(cell.getBox() - 1).contains(cell.getValue())){
+            return false;
+        }
+        
+        if(hyperboxes.get(cell.getHyperbox() - 1).contains(cell.getValue())){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkSolution(){
+        return false;
+    } 
+    
+    // http://stackoverflow.com/questions/363681/generating-random-integers-in-a-specific-range
+    private int getRandomFromSet(ArrayList<Integer> set){  
+        return set.get(ThreadLocalRandom.current().nextInt(0, set.size()));        
+    }    
+        
+    ArrayList<Integer> setNumber;
+    private void resetSetNumber(){
+        setNumber = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
+    }
+    
+    public void generateSudoku(){    
+        for(int j = 0; j < board.length; j++){
+            resetSetNumber();
+            int r = getRandomFromSet(setNumber);
+            setNumber.remove(r);
+            board[j].setValue(r);
         }
     }
 }

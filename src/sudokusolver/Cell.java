@@ -10,64 +10,64 @@ package sudokusolver;
  * @author Tuan Nguyen
  */
 public class Cell {
-    private int row, column, set, hyperset, value, index;
+    private int row, column, box, hyperbox, value, index;
     public Cell(int row, int column){
         this.row = row;
         this.column = column;
-        index = column + (row - 1)* 9 - 1;
+        index = column + (row - 1)* 9;
         this.value = 0;
         
-        this.hyperset = 0;
+        this.hyperbox = 0;
         if(row >= 2 && row <= 4 ){
             if(column >= 2 && column <= 4){
-                hyperset = 1;
+                hyperbox = 1;
             }
             else if(column >= 6 && column <= 8){
-                hyperset = 2;
+                hyperbox = 2;
             }
         }
         else if(row >= 6 && row <= 8 ){
             if(column >= 2 && column <= 4){
-                hyperset = 3;
+                hyperbox = 3;
             }
             else if(column >= 6 && column <= 8){
-                hyperset = 4;
+                hyperbox = 4;
             }
         }              
         
         if(row >= 1 && row <= 3){
             if(column >= 1 && column <= 3){
-                set = 1;
+                box = 1;
              
             }
             else if(column >= 4 && column <= 6){
-                set = 2;
+                box = 2;
             }
             else{
-                set = 3;
+                box = 3;
             }
         }
         else if(row >= 4 && row <= 6){
             if(column >= 1 && column <= 3){
-                set = 4;
+                box = 4;
             }
             else if(column >= 4 && column <= 6){
-                set = 5;
+                box = 5;
             }
             else{
-                set = 6;
+                box = 6;
             }
         }
         else {
           
             if(column >= 1 && column <= 3){
-                set = 7;
+                box = 7;
             }
             else if(column >= 4 && column <= 6){
-                set = 8;
+                box = 8;
             }
             else{
-                set = 9;
+                box = 9;
             }
         }
     }
@@ -85,11 +85,15 @@ public class Cell {
     }
     
     public int getSet(){
-        return this.set;
+        return this.box;
     }
     
-    public int getHyperset(){
-        return this.hyperset;
+    public int getBox(){
+        return this.box;
+    }
+    
+    public int getHyperbox(){
+        return this.hyperbox;
     }
     
     public int getColumn(){
@@ -103,4 +107,6 @@ public class Cell {
     public int getIndex(){
         return this.index;
     }
+    
+   
 }
