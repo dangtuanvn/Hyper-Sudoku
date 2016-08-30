@@ -1,21 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package sudokusolver;
 
-/**
- *
- * @author Tuan Nguyen
- */
+import java.util.ArrayList;
+
 public class Cell {
     private int row, column, box, hyperbox, value, index;
+    private boolean editable = true;
+    ArrayList<Integer> used;
+    
     public Cell(int row, int column){
         this.row = row;
         this.column = column;
         index = column + (row - 1)* 9;
-        this.value = 0;
+        this.value = 0;        
+        used = new ArrayList<>();
         
         this.hyperbox = 0;
         if(row >= 2 && row <= 4 ){
@@ -108,5 +105,24 @@ public class Cell {
         return this.index;
     }
     
+    public boolean isEditable(){
+        return this.editable;
+    }
    
+    public void setEditable(){
+        editable = false;
+    }
+    
+    public ArrayList<Integer> getUsedList(){
+        return used;
+    }
+    
+    public void resetUsedList(){
+        used.clear();
+    }
+        
+    public void addUsedList(int value){
+        used.add(value);
+    }
+    
 }
