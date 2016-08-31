@@ -1,7 +1,6 @@
 package HyperSudoku;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,7 +11,7 @@ public class HyperSudokuSolver {
         Board sudoku = new Board();           
         
         try {
-            String sudokuString = sudoku.importSudoku("input.txt", 4);
+            String sudokuString = sudoku.importSudoku("input.txt", 8);
             sudoku.generateSudokuFromString(sudokuString);
             
         } catch (IOException ex) {
@@ -24,8 +23,8 @@ public class HyperSudokuSolver {
         sudoku.AI_play();
         
         // Check the result
-        sudoku.printSets();
-        System.out.println();
+        // sudoku.printSets();
+        // System.out.println();
         
         if(sudoku.checkSolution()){
             System.out.println("The solution is CORRECT");
