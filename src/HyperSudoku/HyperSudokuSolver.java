@@ -12,7 +12,7 @@ public class HyperSudokuSolver {
         Board sudoku = new Board();           
         
         try {
-            String sudokuString = sudoku.importSudoku("input.txt", 1);
+            String sudokuString = sudoku.importSudoku("input.txt", 4);
             sudoku.generateSudokuFromString(sudokuString);
             
         } catch (IOException ex) {
@@ -27,11 +27,11 @@ public class HyperSudokuSolver {
         sudoku.printSets();
         System.out.println();
         
-        if(sudoku.checkResult()){
-            System.out.println("The final answer is CORRECT");
+        if(sudoku.checkSolution()){
+            System.out.println("The solution is CORRECT");
         }
         else{
-            System.out.println("The final answer is INCORRECT");
+            System.out.println("The solution is INCORRECT");
         }
         System.out.println();
         sudoku.printBoard();

@@ -382,8 +382,8 @@ public class Board {
             }
             
             // Print debug
-            System.out.println("Edit cell: " + index);            
-            printBoard();
+            // System.out.println("Edit cell: " + index);            
+            // printBoard();
         }        
     }    
     
@@ -391,7 +391,7 @@ public class Board {
     Check the sets to for duplicate values
     http://stackoverflow.com/questions/562894/java-detect-duplicates-in-arraylist
     */
-    public boolean checkResult(){
+    public boolean checkSolution(){
         for(int j = 0; j < rows.size(); j++){
             List<Integer> list = rows.get(j);
             Set<Integer> set = new HashSet<>(list);
