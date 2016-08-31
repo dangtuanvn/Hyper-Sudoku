@@ -13,18 +13,22 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Board {
+    // Declare variables
     public int NUM_ROW = 9;
     public int NUM_COLUMN = 9;
     public int NUM_BOX = 9;
     public int NUM_HYPERBOX = 4;
     private Cell[] board;
            
+    // Declare sets in the form of list of lists
     private List<List<Integer>> rows = new ArrayList<>();
     private List<List<Integer>> columns = new ArrayList<>();
     private List<List<Integer>> boxes = new ArrayList<>();
     private List<List<Integer>> hyperboxes = new ArrayList<>();               
     
+    // Constructor
     public Board(){    
+        // Initialize sets
         for(int j = 0; j < NUM_ROW; j++){
             rows.add(new ArrayList<>());
         }
@@ -38,17 +42,28 @@ public class Board {
             hyperboxes.add(new ArrayList<>());
         }                
         
+        // Create the board
         board = createBoard();                
     }
+        
+    // Accessors 
+    public Cell[] getBoard(){
+        return this.board;
+    }
     
+    /*
+    Create a sudoku board
+    */
     public Cell[] createBoard(){
         Cell[] board = new Cell[81];            
         int index = 0;
+        
+        // Create cells
         for(int i = 1; i <= NUM_ROW; i++){
             for(int j = 1; j <= NUM_COLUMN; j++){
                 board[index] = new Cell(i, j);
                 
-                // Load the number to sets
+                // Load the cell's value to sets
                 rows.get(i - 1).add(board[index].getValue());               
                 columns.get(j - 1).add(board[index].getValue());
                 boxes.get(board[index].getSet() - 1).add(board[index].getValue());
@@ -60,10 +75,15 @@ public class Board {
         }                
         return board;
     }
-      
+
+    /*
+    Print the sudoku board
+    http://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+    */
     public void printBoard(){
         int index = 0;
         String pval;
+        
         for(int j = 1; j <= NUM_ROW; j++){
             for(int i = 1; i <= NUM_COLUMN; i++){
                 if(board[index].getValue() == 0){
@@ -72,6 +92,8 @@ public class Board {
                 else{
                     pval = Integer.toString(board[index].getValue());
                 }
+                // Print in color blue if the cell is in a hyperbox
+                // Print a space break every 3 columns
                 if(!(j == 1 || j == 5 || j == 9 || i == 1 || i == 5 || i == 9)){
                     System.out.print("" + "\u001B[36m" + pval + "\u001B[0m  " + (i % 3 == 0 ? "  " : ""));
                 }
@@ -81,19 +103,21 @@ public class Board {
                 index++;
             }
             System.out.println();
-            if(j%3==0){
+            
+            // Print a line break every 3 rows
+            if(j % 3 == 0){
                 System.out.println();
             }
         }
         System.out.println("------------------------------");
         System.out.println();
-    }
-    
-    public Cell[] getBoard(){
-        return this.board;
-    }
-    
+    }        
+ 
+    /*
+    Print the sets for debugging purpose
+    */
     public void printSets(){
+        // Print set of rows
         System.out.println("Rows:");
         for(int j = 0; j < NUM_ROW; j++){
             for(int i = 0; i < NUM_ROW; i++){
@@ -103,6 +127,7 @@ public class Board {
         }
         System.out.println();
         
+        // Print set of columns
         System.out.println("Columns:");
         for(int j = 0; j < NUM_ROW; j++){
             for(int i = 0; i < NUM_ROW; i++){
@@ -112,6 +137,7 @@ public class Board {
         }
         System.out.println();
         
+        // Print set of boxes
         System.out.println("Boxes:");
         for(int j = 0; j < NUM_BOX; j++){
             for(int i = 0; i < 9; i++){
@@ -121,6 +147,7 @@ public class Board {
         }
         System.out.println();
         
+        // Print set of hyperboxes
         System.out.println("Hyperboxes:");
         for(int j = 0; j < NUM_HYPERBOX; j++){
             for(int i = 0; i < 9; i++){
@@ -130,8 +157,12 @@ public class Board {
         }
     }
     
+    /* 
+    Check a cell's value if it is not conflicted with other cells' values
+    WARNING: not used
+    */
     public boolean checkCells(Cell cell){         
-        if(rows.get(cell.getRow() - 1).     contains(cell.getValue())){
+        if(rows.get(cell.getRow() - 1).contains(cell.getValue())){
             return false;
         }
         
@@ -149,6 +180,10 @@ public class Board {
         return true;
     }
     
+    /* 
+    Check a cell's value if it is not conflicted with other cells' values
+    WARNING: not used
+    */
     public boolean checkCells(Cell cell, int newValue){         
         if(rows.get(cell.getRow() - 1).contains(newValue)){
             return false;
@@ -168,13 +203,18 @@ public class Board {
         return true;
     }
     
+    /*
+    Set a cell's value
+    */
     public void setCellValue(int index, int newValue){     
+        // Initialize variables
         int row = board[index].getRow()- 1;
         int column = board[index].getColumn() - 1;
         int box = board[index].getBox() - 1;
         int hyperbox = board[index].getHyperbox() - 1;
         int oldValue = board[index].getValue();
-                
+            
+        // Remove the old value from the sets
         rows.get(row).remove(Integer.valueOf(oldValue));
         columns.get(column).remove(Integer.valueOf(oldValue));
         boxes.get(box).remove(Integer.valueOf(oldValue));
@@ -182,9 +222,11 @@ public class Board {
             hyperboxes.get(hyperbox).remove(Integer.valueOf(oldValue));
         }
         
+        // Set new value on the cell
         board[index].setValue(newValue);
         board[index].addUsedList(newValue);
         
+        // Add new value to the sets
         rows.get(row).add(newValue);
         columns.get(column).add(newValue);
         boxes.get(box).add(newValue);
@@ -193,8 +235,12 @@ public class Board {
         }
     }
     
-    // WARNING: only use this function when creating a board, not solving it
+    /*
+    Set a cell's value and set it uneditable
+    WARNING: only use this function when creating a board, not solving it
+    */
     public void setStartValue(int index, int newValue){        
+        // Initialize varables
         Cell cell = board[index];
         int row = cell.getRow()- 1;
         int column = cell.getColumn() - 1;
@@ -202,6 +248,7 @@ public class Board {
         int hyperbox = cell.getHyperbox() - 1;
         int oldValue = cell.getValue();
         
+        // Remove the old value from the sets
         rows.get(row).remove(oldValue);
         columns.get(column).remove(oldValue);
         boxes.get(box).remove(oldValue);
@@ -209,9 +256,11 @@ public class Board {
             hyperboxes.get(hyperbox).remove(oldValue);
         }
      
+        // Set new value on the cell and set it uneditable
         board[index].setValue(newValue);
-        board[index].setEditable();
+        board[index].setEditableFalse();
         
+        // Add new value to the sets
         rows.get(row).add(newValue);
         columns.get(column).add(newValue);
         boxes.get(box).add(newValue);
@@ -219,17 +268,21 @@ public class Board {
             hyperboxes.get(hyperbox).add(newValue);                                 
         }
     }
-
-    public boolean checkSolution(){
-        return false;
-    } 
     
-    // http://stackoverflow.com/questions/363681/generating-random-integers-in-a-specific-range
+    /* 
+    Get a random element of a list
+    http://stackoverflow.com/questions/363681/generating-random-integers-in-a-specific-range
+    */
     private int getRandomFromSet(List<Integer> set){  
         return set.get(ThreadLocalRandom.current().nextInt(0, set.size()));        
     }                
     
+    /* 
+    Check a cell for possible values that can be filled in that cell.
+    Return those values in an ArrayList.
+    */
     public ArrayList checkPossibleValues(Cell cell) {                
+        // Initialize variables
         ArrayList<Integer> possibleValues = new ArrayList<>();
         possibleValues.addAll(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));                
         
@@ -238,6 +291,7 @@ public class Board {
         int box = cell.getBox() - 1;
         int hyperbox = cell.getHyperbox() - 1;               
         
+        // Check against other cells in the same row
         for (int j = 0; j < rows.get(row).size(); j++) {
             int value = rows.get(row).get(j);
             if (value != 0) {
@@ -248,6 +302,7 @@ public class Board {
             }
         }           
         
+        // Check against other cells in the same column
         for (int j = 0; j < columns.get(column).size(); j++) {
             int value = columns.get(column).get(j);
             if (value != 0) {
@@ -258,6 +313,7 @@ public class Board {
             }
         }        
         
+        // Check against other cells in the same box
         for (int j = 0; j < boxes.get(box).size(); j++) {
             int value = boxes.get(box).get(j);
             if (value != 0) {
@@ -268,6 +324,7 @@ public class Board {
             }
         }        
         
+        // Check against other cells in the same hyperbox
         if (hyperbox != -1) {            
             for (int j = 0; j < hyperboxes.get(hyperbox).size(); j++) {               
                 int value = hyperboxes.get(hyperbox).get(j);
@@ -280,6 +337,7 @@ public class Board {
             }
         }        
         
+        // Check against other cells in the used list
         for (int j = 0; j < cell.getUsedList().size(); j++) {
             int value = cell.getUsedList().get(j);
             if (value != 0) {
@@ -288,24 +346,32 @@ public class Board {
                 }
             }
         }
+        
         return possibleValues;
     }    
-      
+   
+    /*
+    AI to solve the sudoku board.
+    Using exhaustive search and depth first search algorithm.
+    */
     public void AI_play(){        
+        // Declare variables
         int index = 0;
         Stack<Integer> backtrack = new Stack();
         ArrayList<Integer> possibleValues; 
-        while(index < 81){            
+        
+        // Go through all the cells and set their values
+        while(index < 81){                        
             if(board[index].isEditable()){
                 possibleValues = checkPossibleValues(board[index]);
-                if(!possibleValues.isEmpty()){
+                if(!possibleValues.isEmpty()){ // if there is possible values to fill in
                     // int r = getRandomFromSet(possibleValues);            
                     int r = possibleValues.get(0);
                     setCellValue(index, r);
                     backtrack.add(index);
                     index++;
                 }
-                else{                                                  
+                else{ // the index returns to the last element from stack to backtrack                                                  
                     board[index].resetUsedList();                    
                     index = backtrack.pop();                         
                     setCellValue(index, 0);                    
@@ -315,23 +381,16 @@ public class Board {
                 index++;
             }
             
+            // Print debug
             System.out.println("Edit cell: " + index);            
             printBoard();
-        }
-        printSets();
-        System.out.println();
-        
-        if(checkResult()){
-            System.out.println("The final answer is CORRECT");
-        }
-        else{
-            System.out.println("The final answer is INCORRECT");
-        }
-        System.out.println();
-        printBoard();
+        }        
     }    
     
-    // http://stackoverflow.com/questions/562894/java-detect-duplicates-in-arraylist
+    /*
+    Check the sets to for duplicate values
+    http://stackoverflow.com/questions/562894/java-detect-duplicates-in-arraylist
+    */
     public boolean checkResult(){
         for(int j = 0; j < rows.size(); j++){
             List<Integer> list = rows.get(j);
@@ -367,13 +426,19 @@ public class Board {
         return true;
     }
     
+    /*
+    Import a string of txt.
+    Each line in the txt file is a sudoku.
+    Parameter index to pick which sudoku to import.
+    */
     public String importSudoku(String filename, int index) throws IOException{    
         String sudokuString;
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             int lineRead = 0;    
-            while (line != null) {                                                
+            // Read lines until it reaches the index line then append that line and break
+            while (line != null) {                                   
                 if(lineRead == index){
                     sb.append(line);
                     sb.append(System.lineSeparator());                                        
@@ -388,7 +453,10 @@ public class Board {
         return sudokuString;
     }    
     
-    public void generateSudoku(String sudokuString){
+    /*
+    Generate the sudoku board from the imported string
+    */
+    public void generateSudokuFromString(String sudokuString){
         char[] sudokuArray = sudokuString.replaceAll(" ", "").trim().toCharArray();        
         for(int j = 0; j < sudokuArray.length; j++){            
             int value = Character.getNumericValue(sudokuArray[j]);
