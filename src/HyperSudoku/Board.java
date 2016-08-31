@@ -1,4 +1,4 @@
-package sudokusolver;
+package HyperSudoku;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

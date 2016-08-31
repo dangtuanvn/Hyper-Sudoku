@@ -1,4 +1,4 @@
-package sudokusolver;
+package HyperSudoku;
 
 import java.util.ArrayList;
 

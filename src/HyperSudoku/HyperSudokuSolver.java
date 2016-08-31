@@ -1,11 +1,11 @@
-package sudokusolver;
+package HyperSudoku;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SudokuSolver {
+public class HyperSudokuSolver {
     
     public static void main(String[] args) {
         // Create a sudoku board
@@ -16,7 +16,7 @@ public class SudokuSolver {
             sudoku.generateSudokuFromString(sudokuString);
             
         } catch (IOException ex) {
-            Logger.getLogger(SudokuSolver.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HyperSudokuSolver.class.getName()).log(Level.SEVERE, null, ex);
         }
         sudoku.printBoard();
         
