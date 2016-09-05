@@ -339,13 +339,11 @@ public class Board {
         // Check against other cells in the used list
         for (int j = 0; j < cell.getUsedList().size(); j++) {
             int value = cell.getUsedList().get(j);
-            if (value != 0) {
-                if (possibleValues.contains(value)) {
-                    possibleValues.remove(Integer.valueOf(value));
-                }
+            if (possibleValues.contains(value)) {
+                possibleValues.remove(Integer.valueOf(value));
             }
         }
-        
+
         return possibleValues;
     }    
    
@@ -353,7 +351,7 @@ public class Board {
     AI to solve the sudoku board.
     Using exhaustive search and depth first search algorithm.
     */
-    public void AI_play(){        
+    public void AI_exhaustiveSearch(){        
         // Declare variables
         int index = 0;
         Stack<Integer> backtrack = new Stack();
@@ -385,6 +383,57 @@ public class Board {
             // printBoard();
         }        
     }    
+    
+    public void AI_play(){
+        // Declare variables
+        int index = 0;
+        Stack<Integer> backtrack = new Stack();
+        ArrayList<Integer> possibleValues; 
+        boolean check = false;
+        
+        // Go through all the cells and set their values if there is only one possible value
+        for (int j = 0; j < board.length; j++) {
+            if (board[j].isEditable()) {
+                possibleValues = checkPossibleValues(board[j]);
+                if (possibleValues.size() == 1) {
+                    setCellValue(j, possibleValues.get(0));
+                    board[j].setEditableFalse();
+                    System.out.println("FILL " + j + " with " + possibleValues.get(0));
+                    check = true;
+                }
+            }
+            if (j == 80 && check) {
+                j = 0;
+                check = false;
+                System.out.println("LOOP AGAIN");
+            }
+        }
+
+        System.out.println("BACKTRACK");
+
+        // Go through all the cells and set their values using backtracking method
+        while(index < 81){                        
+            if(board[index].isEditable()){
+                possibleValues = checkPossibleValues(board[index]);
+                if(!possibleValues.isEmpty()){ // if there is possible values to fill in
+                    // int r = getRandomFromSet(possibleValues);            
+                    int r = possibleValues.get(0);
+                    setCellValue(index, r);
+                    backtrack.add(index);
+                    index++;
+                }
+                else{ // the index returns to the last element from stack to backtrack                                                  
+                    board[index].resetUsedList();                    
+                    index = backtrack.pop();                         
+                    setCellValue(index, 0);                    
+                }
+            }
+            else{
+                index++;
+            }
+        }
+    }
+    
     
     /*
     Check the sets to for duplicate values
@@ -468,6 +517,14 @@ public class Board {
     
     public void exportSudoku(String filename){
         
+    }
+    
+    public Board cloneBoard(){
+        Board newBoard = new Board();
+        newBoard.createBoard();
+        
+        
+        return newBoard;
     }
 }
 

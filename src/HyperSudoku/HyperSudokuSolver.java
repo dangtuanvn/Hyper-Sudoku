@@ -11,7 +11,7 @@ public class HyperSudokuSolver {
         Board sudoku = new Board();           
         
         try {
-            String sudokuString = sudoku.importSudoku("input.txt", 8);
+            String sudokuString = sudoku.importSudoku("input.txt", 15);
             sudoku.generateSudokuFromString(sudokuString);
             
         } catch (IOException ex) {
