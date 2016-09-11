@@ -33,7 +33,7 @@ public class SpeedTest {
 
             // AI play
             long startTime = System.nanoTime();
-            sudoku.AI_backtrack_var1();
+            sudoku.AI_backtrack_var2();
             long endTime = System.nanoTime();
 
             long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.   
