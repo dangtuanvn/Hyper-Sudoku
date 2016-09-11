@@ -10,7 +10,7 @@ public class Test {
         Board sudoku = new Board();           
         
         try {
-            String sudokuString = sudoku.importSudoku("hard.txt", 5);
+            String sudokuString = sudoku.importSudoku("input.txt", 5);
             sudoku.generateSudokuFromString(sudokuString);
             
         } catch (IOException ex) {

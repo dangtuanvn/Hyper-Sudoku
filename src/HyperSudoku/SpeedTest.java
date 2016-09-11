@@ -15,14 +15,15 @@ import java.util.logging.Logger;
  */
 public class SpeedTest {
     public static void main(String[] args) {
-        // Create a sudoku board
+        int n = 200;
         long sum = 0;
-        for (int j = 0; j < 50; j++) {
+        for (int j = 0; j < n; j++) {
             System.out.println("PUZZLE # " + j);
+            // Create a sudoku board
             Board sudoku = new Board();
 
             try {
-                String sudokuString = sudoku.importSudoku("hard.txt", j);
+                String sudokuString = sudoku.importSudoku("problems.txt", j);
                 sudoku.generateSudokuFromString(sudokuString);
 
             } catch (IOException ex) {
@@ -32,7 +33,7 @@ public class SpeedTest {
 
             // AI play
             long startTime = System.nanoTime();
-            sudoku.AI_backtrack_var1();
+            sudoku.AI_backtrack();
             long endTime = System.nanoTime();
 
             long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.   
@@ -47,13 +48,13 @@ public class SpeedTest {
             }
             System.out.println();
             sudoku.printBoard();
-            System.out.println("Time: " + duration / 1000 + " microseconds");
+            System.out.println("Time: " + duration / 1000000 + " miliseconds");
             System.out.println();
             sum += duration;    
         }
         
-        long average = sum / 100;
-        System.out.println("Sum: " + sum + " microseconds");
-        System.out.println("Average: " + average + " microseconds");
+        long average = sum / n;
+        System.out.println("Sum: " + sum + " miliseconds");
+        System.out.println("Average: " + average + " miliseconds");
     }
 }
