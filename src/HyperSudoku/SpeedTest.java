@@ -33,7 +33,7 @@ public class SpeedTest {
 
             // AI play
             long startTime = System.nanoTime();
-            sudoku.AI_backtrack();
+            sudoku.AI_backtrack_var1();
             long endTime = System.nanoTime();
 
             long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.   
@@ -48,8 +48,10 @@ public class SpeedTest {
             }
             System.out.println();
             sudoku.printBoard();
-            System.out.println("Time: " + duration / 1000000 + " miliseconds");
+            duration = duration / 1000000;
+            System.out.println("Time: " + duration + " miliseconds");
             System.out.println();
+            
             sum += duration;    
         }
         

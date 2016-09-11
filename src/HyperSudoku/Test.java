@@ -38,6 +38,6 @@ public class Test {
         }
         System.out.println();
         sudoku.printBoard();
-        System.out.println("Time: " + duration / 1000 + " microseconds");
+        System.out.println("Time: " + duration / 1000000 + " microseconds");
     }    
 }
