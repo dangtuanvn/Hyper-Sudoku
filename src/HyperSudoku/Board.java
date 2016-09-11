@@ -351,7 +351,7 @@ public class Board {
     AI to solve the sudoku board.
     Using exhaustive search and depth first search algorithm.
     */
-    public void AI_Backtrack(){        
+    public void AI_backtrack(){        
         // Declare variables
         int index = 0;
         Stack<Integer> backtrack = new Stack();

@@ -16,13 +16,13 @@ import java.util.logging.Logger;
 public class SpeedTest {
     public static void main(String[] args) {
         // Create a sudoku board
-        double sum = 0;
+        long sum = 0;
         for (int j = 0; j < 50; j++) {
             System.out.println("PUZZLE # " + j);
             Board sudoku = new Board();
 
             try {
-                String sudokuString = sudoku.importSudoku("easy.txt", j);
+                String sudokuString = sudoku.importSudoku("hard.txt", j);
                 sudoku.generateSudokuFromString(sudokuString);
 
             } catch (IOException ex) {
@@ -32,7 +32,7 @@ public class SpeedTest {
 
             // AI play
             long startTime = System.nanoTime();
-            sudoku.AI_Backtrack();
+            sudoku.AI_backtrack_var1();
             long endTime = System.nanoTime();
 
             long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.   
@@ -49,10 +49,10 @@ public class SpeedTest {
             sudoku.printBoard();
             System.out.println("Time: " + duration / 1000 + " microseconds");
             System.out.println();
-            sum += duration;
+            sum += duration;    
         }
         
-        double average = sum / 100;
+        long average = sum / 100;
         System.out.println("Sum: " + sum + " microseconds");
         System.out.println("Average: " + average + " microseconds");
     }
