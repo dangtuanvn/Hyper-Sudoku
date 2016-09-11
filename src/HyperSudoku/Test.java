@@ -4,23 +4,27 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class HyperSudokuSolver {
-    
+public class Test {   
     public static void main(String[] args) {
         // Create a sudoku board
         Board sudoku = new Board();           
         
         try {
-            String sudokuString = sudoku.importSudoku("input.txt", 15);
+            String sudokuString = sudoku.importSudoku("hard.txt", 5);
             sudoku.generateSudokuFromString(sudokuString);
             
         } catch (IOException ex) {
-            Logger.getLogger(HyperSudokuSolver.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         }
         sudoku.printBoard();
         
         // AI play
-        sudoku.AI_play();
+        long startTime = System.nanoTime();
+        sudoku.AI_backtrack_var1();
+        long endTime = System.nanoTime();
+
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.   
+        
         
         // Check the result
         // sudoku.printSets();
@@ -34,5 +38,6 @@ public class HyperSudokuSolver {
         }
         System.out.println();
         sudoku.printBoard();
+        System.out.println("Time: " + duration / 1000 + " microseconds");
     }    
 }

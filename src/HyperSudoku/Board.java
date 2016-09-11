@@ -351,7 +351,7 @@ public class Board {
     AI to solve the sudoku board.
     Using exhaustive search and depth first search algorithm.
     */
-    public void AI_exhaustiveSearch(){        
+    public void AI_Backtrack(){        
         // Declare variables
         int index = 0;
         Stack<Integer> backtrack = new Stack();
@@ -384,12 +384,67 @@ public class Board {
         }        
     }    
     
-    public void AI_play(){
+    public void AI_backtrack_var1(){
         // Declare variables
         int index = 0;
         Stack<Integer> backtrack = new Stack();
         ArrayList<Integer> possibleValues; 
         boolean check = false;
+        
+        // Go through all the cells and set their values if there is only one possible value
+        for (int j = 0; j < board.length; j++) {
+            if (board[j].isEditable()) {
+                possibleValues = checkPossibleValues(board[j]);
+                if (possibleValues.size() == 1) {
+                    setCellValue(j, possibleValues.get(0));
+                    board[j].setEditableFalse();
+                    // System.out.println("FILL " + j + " with " + possibleValues.get(0));
+                    check = true;
+                }
+            }
+            if (j == 80 && check) {
+                j = 0;
+                check = false;
+                // System.out.println("LOOP AGAIN");
+            }
+        }
+
+        // System.out.println("BACKTRACK");
+
+        // Go through all the cells and set their values using backtracking method
+        while(index < 81){                        
+            if(board[index].isEditable()){
+                possibleValues = checkPossibleValues(board[index]);
+                if(!possibleValues.isEmpty()){ // if there is possible values to fill in
+                    // int r = getRandomFromSet(possibleValues);            
+                    int r = possibleValues.get(0);
+                    setCellValue(index, r);
+                    backtrack.add(index);
+                    index++;
+                }
+                else{ // the index returns to the last element from stack to backtrack                                                  
+                    board[index].resetUsedList();                    
+                    index = backtrack.pop();                         
+                    setCellValue(index, 0);                    
+                }
+            }
+            else{
+                index++;
+            }
+        }
+    }
+    
+    public void AI_backtrack_var2(){
+        // Declare variables
+        int index = 0;
+        Stack<Integer> backtrack = new Stack();
+        ArrayList<Integer> possibleValues; 
+        List<List<Integer>> tempPossibleValues = new ArrayList<>();   
+        boolean check = false;
+        
+        for(int j = 0; j < NUM_ROW; j++){
+            tempPossibleValues.add(new ArrayList<>());
+        }
         
         // Go through all the cells and set their values if there is only one possible value
         for (int j = 0; j < board.length; j++) {
@@ -433,7 +488,6 @@ public class Board {
             }
         }
     }
-    
     
     /*
     Check the sets to for duplicate values
